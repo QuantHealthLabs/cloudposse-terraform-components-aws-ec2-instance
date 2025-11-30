@@ -3,6 +3,12 @@ variable "region" {
   description = "AWS region"
 }
 
+variable "vpc_component_name" {
+  type        = string
+  description = "The name of the VPC component."
+  default     = "cloudposse/aws-vpc"
+}
+
 variable "ami_owner" {
   type        = string
   description = "The owner of the AMI used for the ZScaler EC2 instances."
@@ -37,6 +43,24 @@ variable "instance_type" {
   type        = string
   default     = "t3a.micro"
   description = "The instance family to use for the EC2 instance"
+}
+
+variable "root_block_device" {
+  description = "Root block device"
+  type = object({
+    encrypted = bool
+    size      = number
+  })
+}
+
+variable "ebs_block_devices" {
+  description = "Map of EBS block devices keyed by device name, i.e., `/dev/sdh`"
+  type = map(object({
+    encrypted             = optional(bool, true)
+    delete_on_termination = optional(bool, false)
+    size                  = number
+    snapshot_id           = optional(string)
+  }))
 }
 
 variable "security_group_rules" {
